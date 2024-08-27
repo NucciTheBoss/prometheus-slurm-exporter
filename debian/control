@@ -1,0 +1,26 @@
+Source: prometheus-slurm-exporter
+Section: admin
+Priority: optional
+Maintainer: Jason C. Nucciarone <nuccitheboss@ubuntu.com>
+Build-Depends: debhelper-compat (= 13),
+               dh-sequence-golang,
+               golang-any,
+               golang-github-prometheus-client-model-dev,
+               golang-golang-x-exp-dev,
+               golang-prometheus-client-dev
+Testsuite: autopkgtest-pkg-go
+Standards-Version: 4.6.2
+Vcs-Browser: https://github.com/rivosinc/prometheus-slurm-exporter
+Vcs-Git: https://github.com/rivosinc/prometheus-slurm-exporter.git
+Homepage: https://github.com/rivosinc/prometheus-slurm-exporter
+XS-Go-Import-Path: github.com/rivosinc/prometheus-slurm-exporter
+
+Package: prometheus-slurm-exporter
+Architecture: any
+Depends: adduser,
+         ${misc:Depends},
+         ${shlibs:Depends}
+Built-Using: ${misc:Built-Using}
+Description: Prometheus exporter for the Slurm workload manager
+ This exporter collects metrics from the Slurm workload manager 
+ by using the output of the Slurm CLI commands.

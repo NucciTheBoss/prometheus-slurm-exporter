@@ -1,0 +1,15 @@
+#!/bin/sh
+# postrm script for prometheus-slurm-exporter
+# Executed after prometheus-slurm-exporter package is removed from system.
+
+set -e
+
+case "$1" in
+  purge)
+        rm -rf /var/lib/prometheus/prometheus-slurm-exporter/ \
+            /run/prometheus/prometheus-slurm-exporter.pid
+        # Do not remove prometheus system user as this will break other exporters.
+        ;;
+esac
+
+#DEBHELPER#

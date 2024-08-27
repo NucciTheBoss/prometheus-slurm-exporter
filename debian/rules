@@ -1,0 +1,34 @@
+#!/usr/bin/make -f
+include /usr/share/dpkg/pkg-info.mk
+
+export DH_VERBOSE=1
+
+BINNAME := prometheus-slurm-exporter
+BUILDDIR := $(CURDIR)/build
+METAPKG := github.com/prometheus/common
+
+BRANCH     := debian/sid
+USER       := hpc-ubuntu-group@canonical.com
+BUILD_DATE := $(shell date --utc --date='@$(SOURCE_DATE_EPOCH)' \
+    +%Y%m%d-%H:%M:%S)
+GO_VERSION := $(shell go version | sed 's/go version \(\S*\).*/\1/')
+BUILDTAGS  :=
+BUILDFLAGS  = -tags "$(BUILDTAGS)" -ldflags \
+  " -X $(METAPKG)/version.Version=$(DEB_VERSION_UPSTREAM)\
+    -X $(METAPKG)/version.Revision=$(DEB_VERSION)\
+    -X $(METAPKG)/version.Branch=$(BRANCH)\
+    -X $(METAPKG)/version.BuildUser=$(USER)\
+    -X $(METAPKG)/version.BuildDate=$(BUILD_DATE)\
+    -X $(METAPKG)/version.GoVersion=$(GO_VERSION)"
+
+%:
+	dh $@ --buildsystem=golang --build-directory=$(BUILDDIR)
+
+override_dh_auto_build:
+	dh_auto_build -- $(BUILDFLAGS)
+
+override_dh_auto_install:
+	dh_auto_install -- --no-source
+
+override_dh_auto_test:
+	# The test suite requires `just` and `pre-commit` to generate fixtures.

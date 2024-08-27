@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus exporter for Slurm workload manager metrics
+Documentation=https://github.com/rivosinc/prometheus-slurm-exporter
+
+[Service]
+Restart=on-failure
+User=prometheus
+EnvironmentFile=/etc/default/prometheus-slurm-exporter
+ExecStart=/usr/bin/prometheus-slurm-exporter $ARGS
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

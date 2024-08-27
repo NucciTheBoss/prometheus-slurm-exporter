@@ -1,0 +1,29 @@
+#!/bin/sh
+# postinst script for prometheus-slurm-exporter
+# Executed after prometheus-slurm-exporter package is installed on system.
+
+set -e
+
+case "$1" in
+  configure)
+    adduser --quiet --system --home /var/lib/prometheus --no-create-home \
+            --group --gecos "Prometheus daemon" prometheus
+
+    if ! dpkg-statoverride --list /var/lib/prometheus >/dev/null; then
+      chown prometheus:prometheus /var/lib/prometheus
+    fi
+  ;;
+
+  abort-upgrade|abort-remove|abort-deconfigure)
+    :
+  ;;
+
+  *)
+    echo "postinst called with unknown argument '$1'" >&2
+    exit 1
+  ;;
+esac
+
+#DEBHELPER#
+
+exit 0
